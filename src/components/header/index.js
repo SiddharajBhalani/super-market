@@ -58,9 +58,12 @@ export const Header = () => {
                     <div className="flex items-center justify-between border-t border-blue-700 pt-3">
                         {/* Left: Menu Options */}
                         <nav className="flex items-center space-x-6">
+
+                        
                             <a href="#" className="text-sm hover:underline">
                                 Shop by Categories
                             </a>
+                           
                             <a href="#" className="text-sm hover:underline">
                                 View All Products
                             </a>
@@ -68,12 +71,17 @@ export const Header = () => {
 
                         {/* Right: Utility Links */}
                         <div className="flex items-center space-x-6">
+                        <Link to="/Contact" className="text-sm hover:underline">
                             <a>
                                 Contact Us
                             </a>
+                            </Link>
+
+                            <Link to="/Shipping" className="text-sm hover:underline">
                             <a href="#" className="text-sm hover:underline">
                                 Shipping Policy
                             </a>
+                            </Link>
                             <button className="flex items-center bg-white text-blue-800 rounded-lg py-2 px-4 text-sm font-semibold space-x-2">
                                 <CallIcon />
                                 <span>Call us</span>

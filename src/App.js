@@ -2,6 +2,8 @@ import React from "react";
 import { Header } from "./components/header";
 import { HomePage } from "./components/homePage";
 import { Login } from "./components/Login";
+import { Shipping } from "./components/shippingpolicy"
+import { Contact } from "./components/contact"
 import { SignupForm } from"./components/singup";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import { Footer } from "./components/footer";
@@ -51,6 +53,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/Shipping" element={<Shipping />} />
+          <Route path="/Contact" element={<Contact />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/collection/frozen" element={<FrozenItems />} />
           <Route path="/collection/rice" element={<RiceItems />} />
