@@ -13,6 +13,7 @@ import kachori from "../../Images/frozen/p12kachori.png";
 import samosa from "../../Images/frozen/p13samosa.png";
 import pastapuf from "../../Images/frozen/p14pastapuff.png";
 import paubhaji from "../../Images/frozen/p15paubhaji.webp";
+
 import p1 from "../../Images/biscuitsbekery/p1sunfeast-dark-fantasy-big-choco-fills.png";
 import P2 from "../../Images/biscuitsbekery/p2sunfeast-dark-fantasy-bourbon-biscuits.png";
 import p3 from "../../Images/biscuitsbekery/p3sunfeast-dark-fantasy-choco-fills.png";
@@ -65,5 +66,7 @@ export const collection = {
         { item: "parle-hide-seek-biscuits", src: p13, pcs: "2kg", price: "$2.30" },
         { item: "parle-hide-seek-fab-chocolate-biscuits", src: p14, pcs: "2kg", price: "$2.30" },
         { item: "parle-hide-seek-strawberry-biscuits", src: p15, pcs: "2kg", price: "$2.30" },
-    ]
+    ],
+
+    
 }

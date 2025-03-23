@@ -3,6 +3,7 @@ import axios from "axios";
 
 
 export const Contact = () => {
+ 
     return (
       <div className="flex flex-col items-center p-6 text-gray-900 text-center">
         <h3 className="text-lg font-bold text-gray-800">Address:</h3>

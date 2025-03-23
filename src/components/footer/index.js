@@ -10,9 +10,9 @@ import { Paypal } from "../svgs/Paypal";
 import { Shoppay } from "../svgs/Shoppay";
 import { Unionpay } from "../svgs/Unionpay";
 import { Visa } from "../svgs/Visa";
-
-
-
+import { Facebook } from "../svgs/Facebook"
+import { Instagram } from "../svgs/Instagram";
+import { Whatsapp } from "../svgs/Whatsapp"
 export const Footer = () => {
     return (
         <footer style={{ backgroundColor: "#4a4a4a", color: "#fff", padding: "20px 10px", textAlign: "center" }}>
@@ -23,10 +23,10 @@ export const Footer = () => {
                     <ul style={{ listStyleType: "none", padding: 0, lineHeight: 2 }}>
                         <li><Link to="/products" style={{ color: "#fff", textDecoration: "none" }}>All products</Link></li>
                         <li><Link to="/categories" style={{ color: "#fff", textDecoration: "none" }}>All Categories</Link></li>
-                        <li><Link to="/fresh-frozen" style={{ color: "#fff", textDecoration: "none" }}>Fresh & Frozen</Link></li>
-                        <li><Link to="/ingredients" style={{ color: "#fff", textDecoration: "none" }}>Ingredients</Link></li>
-                        <li><Link to="/cupboard" style={{ color: "#fff", textDecoration: "none" }}>Cupboard</Link></li>
-                        <li><Link to="/health-beauty" style={{ color: "#fff", textDecoration: "none" }}>Health & Beauty</Link></li>
+                        <li><Link to="/collection/frozen" style={{ color: "#fff", textDecoration: "none" }}>Fresh & Frozen</Link></li>
+                        <li><Link to="/collection/snacks" style={{ color: "#fff", textDecoration: "none" }}>Ingredients</Link></li>
+                        <li><Link to="/collection/noodlespasta" style={{ color: "#fff", textDecoration: "none" }}>Cupboard</Link></li>
+                        <li><Link to="/collection/healthbeauty" style={{ color: "#fff", textDecoration: "none" }}>Health & Beauty</Link></li>
                     </ul>
                 </div>
 
@@ -36,10 +36,10 @@ export const Footer = () => {
                     <ul style={{ listStyleType: "none", padding: 0, lineHeight: 2 }}>
                         <li><Link to="/contact" style={{ color: "#fff", textDecoration: "none" }}>Contact Us</Link></li>
                         <li><Link to="/about" style={{ color: "#fff", textDecoration: "none" }}>About Us</Link></li>
-                        <li><Link to="/privacy-policy" style={{ color: "#fff", textDecoration: "none" }}>Privacy Policy</Link></li>
-                        <li><Link to="/refund-policy" style={{ color: "#fff", textDecoration: "none" }}>Refund Policy</Link></li>
-                        <li><Link to="/shipping-policy" style={{ color: "#fff", textDecoration: "none" }}>Shipping Policy</Link></li>
-                        <li><Link to="/terms" style={{ color: "#fff", textDecoration: "none" }}>Terms of Service</Link></li>
+                        <li><Link to="/Shipping" style={{ color: "#fff", textDecoration: "none" }}>Privacy Policy</Link></li>
+                        <li><Link to="/Shipping" style={{ color: "#fff", textDecoration: "none" }}>Refund Policy</Link></li>
+                        <li><Link to="/Shipping" style={{ color: "#fff", textDecoration: "none" }}>Shipping Policy</Link></li>
+                        <li><Link to="/Shipping" style={{ color: "#fff", textDecoration: "none" }}>Terms of Service</Link></li>
                     </ul>
                 </div>
 
@@ -57,13 +57,11 @@ export const Footer = () => {
                     </p>
 
 
-                    <div>
-                        <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ margin: "0 5px" }}>
-                            <i className="fab fa-facebook" style={{ fontSize: "20px", color: "#fff" }}></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ margin: "0 5px" }}>
-                            <i className="fab fa-instagram" style={{ fontSize: "20px", color: "#fff" }}></i>
-                        </a>
+                    <div className="flex justify-center" style={{ margin: "40px 0" }}>
+
+                       <Facebook />
+                        <Instagram />
+                        <Whatsapp />
                         <a href="https://whatsapp.com" target="_blank" rel="noreferrer" style={{ margin: "0 5px" }}>
                             <i className="fab fa-whatsapp" style={{ fontSize: "20px", color: "#fff" }}></i>
                         </a>

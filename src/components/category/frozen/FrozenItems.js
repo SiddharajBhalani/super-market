@@ -13,6 +13,6 @@ export const FrozenItems = () => {
             <CategoryHeading category="Frozen" img={Frozen} />
             <hr />
             <CollectionItems collection={collection.Frozen} />
-        </div >
+        </div > 
     )
 }

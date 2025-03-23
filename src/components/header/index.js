@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserIcon, CartIcon, CallIcon } from "../svgs";
+import { CartModal } from "./CartModal";
+import { CartContext } from "../cartContext";
+
 
 export const Header = () => {
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const { cartItems, removeFromCart } = useContext(CartContext);
+
+     // Remove item from cart
+     const removeItem = (index) => {
+        removeFromCart(index)
+
+    };
+
     return (
         <>
             <header className="bg-blue-800 text-white">
@@ -46,12 +58,25 @@ export const Header = () => {
                         </div>
 
                         {/* Right Icons */}
-                        <div className="flex items-center space-x-6">
-                            <Link to="/login" className="text-sm hover:underline">
-                                <UserIcon />
-                            </Link>
-                            <CartIcon />
+                        <div className="relative">
+                            <div className="flex items-center space-x-6">
+                                <Link to="/login" className="text-sm hover:underline">
+                                    <UserIcon />
+                                </Link>
+                                <button onClick={() => setIsCartOpen(!isCartOpen)} className="relative">
+                                    <CartIcon />
+                                    {cartItems.length > 0 && (
+                                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                            {cartItems.length}
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
+
+                            {/* Cart Modal */}
+                            <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartData={cartItems} onRemove={removeItem} />
                         </div>
+
                     </div>
 
                     {/* Second Row */}
@@ -59,11 +84,14 @@ export const Header = () => {
                         {/* Left: Menu Options */}
                         <nav className="flex items-center space-x-6">
 
-                        
-                            <a href="#" className="text-sm hover:underline">
-                                Shop by Categories
-                            </a>
-                           
+
+
+                            <Link to="" className="text-sm hover:underline">
+                                <a href="#" className="text-sm hover:underline">
+                                    Shop by Categories
+                                </a>
+                            </Link>
+
                             <a href="#" className="text-sm hover:underline">
                                 View All Products
                             </a>
@@ -71,16 +99,16 @@ export const Header = () => {
 
                         {/* Right: Utility Links */}
                         <div className="flex items-center space-x-6">
-                        <Link to="/Contact" className="text-sm hover:underline">
-                            <a>
-                                Contact Us
-                            </a>
+                            <Link to="/Contact" className="text-sm hover:underline">
+                                <a>
+                                    Contact Us
+                                </a>
                             </Link>
 
                             <Link to="/Shipping" className="text-sm hover:underline">
-                            <a href="#" className="text-sm hover:underline">
-                                Shipping Policy
-                            </a>
+                                <a href="#" className="text-sm hover:underline">
+                                    Shipping Policy
+                                </a>
                             </Link>
                             <button className="flex items-center bg-white text-blue-800 rounded-lg py-2 px-4 text-sm font-semibold space-x-2">
                                 <CallIcon />

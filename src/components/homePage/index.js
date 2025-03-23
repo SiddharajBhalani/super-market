@@ -8,7 +8,7 @@ export const HomePage = () => {
         <div>
             <Banner />
             <Categories />
-            <RecentlyViewSlider />
+            {/* <RecentlyViewSlider /> */}
             <IntroBanner />
         </div>
     );
