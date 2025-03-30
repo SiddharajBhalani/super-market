@@ -4,7 +4,7 @@ import WinterImage from "../../Images/catgory/WinterBanner.png";
 export const Banner = () => {
     return (
        <div>
-  <img src={WinterImage}></img>
+  <img style={{ width: "100%" }} src={WinterImage}></img>
 
        </div>
     );

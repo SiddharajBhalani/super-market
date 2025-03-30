@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Header } from "../header";
+import { useNavigate } from "react-router-dom";
+
 
 export const Login = () => {
   // State management for email, password, and errors
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -23,9 +26,11 @@ export const Login = () => {
         password,
       });
 
-      // Handle success response
-      console.log("Login successful:", response.data);
-      alert(`Welcome, ${response.data.user.name}!`);
+       // Store user data in localStorage
+       localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      // if user login successfull then redirect on home page
+      navigate("/"); 
     } catch (err) {
       // Handle error response
       if (err.response && err.response.data.message) {
@@ -34,11 +39,6 @@ export const Login = () => {
         setError("An error occurred. Please try again.");
       }
     }
-    // else {
-    //   setError("");
-    //   console.log("Email:", email, "Password:", password);
-    //   // Add API call or form submission logic here
-    // }
   };
 
   return (

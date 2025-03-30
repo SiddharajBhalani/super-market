@@ -7,7 +7,7 @@ export const IntroBanner = () => {
     return (
 
         <div>
-          <img src={introBanner} alt="introBanner"></img>
+          <img style={{ width: "100%" }}  src={introBanner} alt="introBanner"></img>
 
         </div>
     )}

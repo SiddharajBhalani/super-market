@@ -39,6 +39,9 @@ import { HealthbeautyItems } from "./components/category/healthbeauty";
 import { ReligiousItemsItems } from "./components/category/religiousitems";
 import { ProductDetail } from "./components/category/productDetail";
 import { CartProvider } from "./components/cartContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Order } from "./components/Order";
+
 
 export default function App() {
   return (
@@ -46,14 +49,19 @@ export default function App() {
       <CartProvider>
         <BrowserRouter>
           <Header />
-          {/* Main Routes */}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+
+            {/* Public Routes */}
             <Route path="/login" element={<Login />} />
-            <Route path="/Shipping" element={<Shipping />} />
-            <Route path="/Contact" element={<Contact />} />
-            <Route path="/Addtocard" element={<Addtocard />} />
             <Route path="/signup" element={<SignupForm />} />
+
+
+            {/* Protected Routes (Require Login) */}
+            <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
+            <Route path="/Shipping" element={<ProtectedRoute element={<Shipping />} />} />
+            <Route path="/Contact" element={<ProtectedRoute element={<Contact />} />} />
+            <Route path="/Addtocard" element={<ProtectedRoute element={<Addtocard />} />} />
+            <Route path="/order" element={<ProtectedRoute element={<Order />} />} />
             <Route path="/collection/frozen" element={<FrozenItems />} />
             <Route path="/collection/rice" element={<RiceItems />} />
             <Route path="/collection/flour" element={<FlourItems />} />

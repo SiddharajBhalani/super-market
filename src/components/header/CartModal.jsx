@@ -69,7 +69,7 @@ export const CartModal = ({ isOpen, onClose, cartData, onRemove }) => {
                             </div>
                             {/* ✅ Show Total Price on Checkout Button */}
                             <Link to="/Addtocard" >
-                                <button onClick={onClose} className="w-full bg-red-500 text-white py-2 mt-4 rounded-md text-lg font-semibold">
+                                <button onClick={onClose} className="w-full bg-blue-900 text-white py-2 mt-4 rounded-md text-lg font-semibold">
                                     Checkout (${totalPrice.toFixed(2)})
                                 </button>
                             </Link>

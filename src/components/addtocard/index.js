@@ -1,29 +1,5 @@
-// import React from "react";
-// import { Link } from "react-router-dom";
-// import { Bcart } from "../svgs/Bcart"
-
-// export const Addtocard = () => {
-//   return (
-
-//       <div className="flex flex-col items-center mt-30">
-//       <Bcart />
-//         <p className="mt-2 text-gray-700 text-lg">Your cart is empty</p>
-//         <Link to="/" className="mt-4">
-//           <button className="bg-blue-900 text-white font-semibold px-6 py-2 rounded-md shadow-md">
-//             Start shopping
-//           </button>
-//         </Link>
-//       </div>
-
-//   );
-// };
-
-//changes
-
-
-
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { CartContext } from "../cartContext";
 import { AmericanIcon, AplepayIcon } from "../svgs";
 import { Dinersclub } from "../svgs/Dinersclub";
 import { Discover } from "../svgs/Discover";
@@ -34,34 +10,122 @@ import { Paypal } from "../svgs/Paypal";
 import { Shoppay } from "../svgs/Shoppay";
 import { Unionpay } from "../svgs/Unionpay";
 import { Visa } from "../svgs/Visa";
-import { CartContext } from "../cartContext";
+import { useNavigate } from "react-router-dom";
+
 
 export const Addtocard = () => {
+  const { cartItems, RemoveAllItems } = useContext(CartContext);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [contactError, setContactError] = useState("");
-  const { cartItems } = useContext(CartContext);
-  console.log("cart items", cartItems);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    phone: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+    nameOnCard: "",
+  });
 
-  // Calculate total price
   const subtotal = cartItems.reduce((total, item) => {
     return total + parseFloat(item.price.replace("$", "")) * item.quantity;
   }, 0);
   const shipping = cartItems.length > 0 ? 1.0 : 0;
   const total = subtotal + shipping;
 
-
-  const validateEmail = () => {
-    if (!email) {
-      setContactError("");
+  const getShippingCharge = (subtotal) => {
+    if (subtotal < 20) return "$6.99";
+    if (subtotal >= 20 && subtotal < 60) return "$4.99";
+    return "Free Shipping";
+  };
+  let error = "";
+  const validateField = (name, value) => {
+    if (!value.trim()) {
+      error = `${name.replace(/([A-Z])/g, ' $1')} is required`;
     } else {
-      setContactError("Enter an email");
+      if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = "Enter a valid email address";
+      if (name === "postalCode" && isNaN(value)) error = "Enter a valid postal code";
+      if (name === "phone" && isNaN(value)) error = "Enter a valid phone number";
+      if (name === "cardNumber" && !/^\d{16}$/.test(value)) error = "Enter a valid 16-digit card number";
+      if (name === "expiry" && !/^\d{2}\/\d{2}$/.test(value)) error = "Enter a valid MM/YY format";
+      if (name === "cvv" && !/^\d{3}$/.test(value)) error = "Enter a valid 3-digit CVV";
+    }
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    let newErrors = {};
+    let hasErrors = false;
+
+    // Validate all fields
+    Object.keys(formData).forEach((field) => {
+        let errorMessage = validateField(field, formData[field]); // Get error message
+        if (errorMessage) {
+            newErrors[field] = errorMessage;
+            hasErrors = true;
+        }
+    });
+
+    if (!email.trim()) {
+        newErrors.email = "Email is required";
+        hasErrors = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        newErrors.email = "Enter a valid email address";
+        hasErrors = true;
+    }
+
+    setErrors(newErrors); // Update state with all errors at once
+
+    if (hasErrors || Object.values(newErrors).some(error => error)) {
+        alert("Please fix all errors before submitting.");
+        return;
+    }
+
+
+    // Prepare order data
+    const orderData = {
+      name: `${formData.firstName} ${formData.lastName}`,
+      email,
+      address: formData.address,
+      city: formData.city,
+      postalCode: formData.postalCode,
+      phone: formData.phone,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Order placed successfully!");
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+      navigate("/order");
+      RemoveAllItems();
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Failed to place the order. Please try again.");
     }
   };
 
+
   return (
     <div className="flex justify-center items-start p-6 bg-gray-100 min-h-screen">
-      {/* Left Section */}
-      <div className="w-2/3 bg-white p-8 rounded-lg shadow-lg">
+      <form className="w-2/3 bg-white p-8 rounded-lg shadow-lg" onSubmit={handleSubmit}>
         <p className="text-black-600 text-sm">Express checkout</p>
         <div className="flex justify-between gap-4 mb-6">
           <button className="bg-purple-600 text-white w-1/3 py-2 rounded">
@@ -80,65 +144,96 @@ export const Addtocard = () => {
 
         <hr className="mb-6" />
 
-        {/* Contact Section */}
         <h2 className="text-lg font-semibold">Contact</h2>
         <input
           type="email"
-          className="w-full border p-2 mt-2 rounded focus:outline-blue-500"
           placeholder="Email"
+          className="w-full border p-2 mt-2 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={validateEmail}
+          onBlur={(e) => validateField("email", e.target.value)}
         />
-        {contactError && <p className="text-red-500 text-sm">{contactError}</p>}
-
-        {/* Delivery Section */}
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         <h2 className="text-lg font-semibold mt-6">Delivery</h2>
         <div className="grid grid-cols-2 gap-4 mt-2">
-          <input type="text" placeholder="First name" className="border p-2 rounded" />
-          <input type="text" placeholder="Last name" className="border p-2 rounded" />
-          <input type="text" placeholder="Address" className="col-span-2 border p-2 rounded" />
-          <input type="text" placeholder="City" className="border p-2 rounded" />
-          <input type="text" placeholder="Postal Code" className="border p-2 rounded" />
-          <input type="text" placeholder="Phone" className="col-span-2 border p-2 rounded" />
+          {Object.keys(formData).slice(0, 6).map((field) => (
+            <div key={field} className={field === "address" ? "col-span-2" : ""}>
+              <input
+                type="text"
+                name={field}
+                placeholder={field.replace(/([A-Z])/g, ' $1')}
+                className="border p-2 rounded w-full"
+                onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+                onBlur={(e) => validateField(field, e.target.value)}
+              />
+              {errors[field] && <p className="text-red-500 text-sm">{errors[field]}</p>}
+            </div>
+          ))}
         </div>
 
-        {/* Payment Section */}
-        <h2 className="text-lg font-semibold mt-6">Payment</h2>
-        <div className="mt-2 border p-4 rounded">
-          <div className="flex items-center gap-2">
-            <input type="radio" name="payment" defaultChecked />
-            <span>
+        <div className="flex justify-between items-center space-x-2 w-full" style={{ margin: "10px 0" }}>
+          <h2 className="text-lg font-semibold mt-0">Payment </h2>
+          <div className="flex">
+            <AmericanIcon />
+            <AplepayIcon />
+            <Dinersclub />
+            < Discover />
+            <Gpay />
+            <Maestro />
+            <Pimaster />
+            <Paypal />
+            <Shoppay />
+            <Unionpay />
+            <Visa />
+          </div>
 
-              <div className="flex justify-center space-x-2 w-full" style={{ margin: "10px 0" }}>
-                Credit Card
-                <AmericanIcon />
-                <AplepayIcon />
-                <Dinersclub />
-                <Discover />
-                <Gpay />
-                <Maestro />
-                <Pimaster />
-                <Paypal />
-                <Shoppay />
-                <Unionpay />
-                <Visa />
-              </div>
-            </span>
-          </div>
-          <input type="text" placeholder="Card Number" className="w-full border p-2 mt-2 rounded" />
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <input type="text" placeholder="MM/YY" className="border p-2 rounded" />
-            <input type="text" placeholder="CVV" className="border p-2 rounded" />
-          </div>
-          <input type="text" placeholder="Name on card" className="w-full border p-2 mt-2 rounded" />
+
         </div>
 
+        <input
+          type="text"
+          name="cardNumber"
+          placeholder="Card Number"
+          className="w-full border p-2 mt-2 rounded"
+          onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
+          onBlur={(e) => validateField("cardNumber", e.target.value)}
+        />
+        {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          <input
+            type="text"
+            name="expiry"
+            placeholder="MM/YY"
+            className="border p-2 rounded"
+            onChange={(e) => setFormData({ ...formData, expiry: e.target.value })}
+            onBlur={(e) => validateField("expiry", e.target.value)}
+          />
+          {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+          <input
+            type="text"
+            name="cvv"
+            placeholder="CVV"
+            className="border p-2 rounded"
+            onChange={(e) => setFormData({ ...formData, cvv: e.target.value })}
+            onBlur={(e) => validateField("cvv", e.target.value)}
+          />
+          {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}
+        </div>
+        <input
+          type="text"
+          name="nameOnCard"
+          placeholder="Name on card"
+          className="w-full border p-2 mt-2 rounded"
+          onChange={(e) => setFormData({ ...formData, nameOnCard: e.target.value })}
+          onBlur={(e) => validateField("nameOnCard", e.target.value)}
+        />
+        {errors.nameOnCard && <p className="text-red-500 text-sm">{errors.nameOnCard}</p>}
         {/* Pay Now Button */}
-        <button className="w-full bg-blue-600 text-white py-3 mt-6 rounded hover:bg-blue-700">
+        <button type="submit" className="w-full bg-blue-600 text-white py-3 mt-6 rounded hover:bg-blue-700">
           Pay Now
         </button>
-      </div>
+
+      </form>
 
       {/* Right Section - Order Summary */}
       <div className="w-1/3 bg-white p-6 ml-6 rounded-lg shadow-lg">
@@ -149,7 +244,7 @@ export const Addtocard = () => {
         </div>
         <div className="flex justify-between mb-2">
           <span>Shipping</span>
-          <span>${shipping.toFixed(2)}</span>
+          <span>{getShippingCharge(subtotal)}</span>
         </div>
         <hr className="mb-2" />
         <div className="flex justify-between font-semibold">
@@ -160,7 +255,3 @@ export const Addtocard = () => {
     </div>
   );
 };
-
-
-
-

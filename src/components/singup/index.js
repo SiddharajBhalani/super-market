@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -10,13 +12,14 @@ export const SignupForm = () => {
   });
 
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -33,8 +36,23 @@ export const SignupForm = () => {
       return;
     }
 
-    // Handle form submission logic
-    console.log("Form submitted", formData);
+    try {
+      // API Call to Backend
+      const response = await axios.post("http://localhost:5000/signup", {
+        name: `${username} ${lastname}`, // Combine first & last name
+        email,
+        password,
+      });
+
+      alert("Signup successful! Please login.");
+      navigate("/login"); // Redirect to login page after success
+    } catch (err) {
+      if (err.response && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    }
   };
 
   return (
@@ -45,7 +63,7 @@ export const SignupForm = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username */}
+          {/* First Name */}
           <div>
             <label className="block text-gray-700 font-medium">First Name</label>
             <input
@@ -58,7 +76,7 @@ export const SignupForm = () => {
             />
           </div>
 
-          {/* Lastname */}
+          {/* Last Name */}
           <div>
             <label className="block text-gray-700 font-medium">Last Name</label>
             <input
@@ -124,11 +142,10 @@ export const SignupForm = () => {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none"
           >
-            <a href="/login">Sign Up</a>
+            Sign Up
           </button>
         </form>
       </div>
     </div>
   );
 };
-
